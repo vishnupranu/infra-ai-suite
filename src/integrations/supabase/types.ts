@@ -62,6 +62,94 @@ export type Database = {
         }
         Relationships: []
       }
+      earnings: {
+        Row: {
+          amount: number
+          created_at: string | null
+          description: string | null
+          id: string
+          referral_id: string | null
+          source: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          referral_id?: string | null
+          source: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          referral_id?: string | null
+          source?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "earnings_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string | null
+          id: string
+          payment_method: string
+          status: string | null
+          tool_id: string | null
+          transaction_id: string | null
+          updated_at: string | null
+          upi_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          payment_method: string
+          status?: string | null
+          tool_id?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          upi_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          payment_method?: string
+          status?: string | null
+          tool_id?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          upi_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "ai_tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -89,6 +177,57 @@ export type Database = {
           id?: string
           preferred_language?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_at: string | null
+          id: string
+          referral_code: string
+          referred_user_id: string
+          referrer_id: string
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          referral_code: string
+          referred_user_id: string
+          referrer_id: string
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          referral_code?: string
+          referred_user_id?: string
+          referrer_id?: string
+          status?: string | null
         }
         Relationships: []
       }
@@ -168,7 +307,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_referral_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       app_role: "user" | "admin"

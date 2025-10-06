@@ -1,13 +1,16 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Star, ExternalLink } from "lucide-react";
+import { Star, ExternalLink, CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 interface AIToolCardProps {
+  id: string;
   name: string;
   description: string;
   category: string;
   price_monthly?: number;
+  price_annual?: number;
   rating?: number;
   features?: string[];
   affiliate_link: string;
@@ -16,16 +19,19 @@ interface AIToolCardProps {
 }
 
 export const AIToolCard = ({
+  id,
   name,
   description,
   category,
   price_monthly,
+  price_annual,
   rating,
   features,
   affiliate_link,
   icon_url,
   is_featured,
 }: AIToolCardProps) => {
+  const navigate = useNavigate();
   return (
     <Card className="group relative overflow-hidden bg-gradient-card border-border hover:border-primary transition-all duration-300 hover:shadow-elevated hover:scale-105">
       <div className="p-6">
@@ -64,7 +70,7 @@ export const AIToolCard = ({
           </ul>
         )}
 
-        <div className="flex items-center justify-between pt-4 border-t border-border">
+        <div className="flex flex-col gap-3 pt-4 border-t border-border">
           <div className="flex items-center gap-2">
             {rating && (
               <div className="flex items-center gap-1">
@@ -74,18 +80,32 @@ export const AIToolCard = ({
             )}
             {price_monthly && (
               <span className="text-sm text-muted-foreground">
-                ${price_monthly}/mo
+                ₹{price_monthly}/mo
+              </span>
+            )}
+            {price_annual && (
+              <span className="text-xs text-muted-foreground">
+                or ₹{price_annual}/year
               </span>
             )}
           </div>
-          <Button
-            size="sm"
-            className="bg-gradient-primary hover:shadow-glow transition-all"
-            onClick={() => window.open(affiliate_link, "_blank")}
-          >
-            View Tool
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              className="bg-gradient-primary hover:shadow-glow transition-all flex-1"
+              onClick={() => navigate(`/payment?tool=${id}&amount=${price_monthly || price_annual || 0}`)}
+            >
+              <CreditCard className="mr-2 h-4 w-4" />
+              Subscribe
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => window.open(affiliate_link, "_blank")}
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </Card>

@@ -75,9 +75,14 @@ export const Navbar = ({ language, setLanguage }: NavbarProps) => {
               {t.tools}
             </Link>
             {user && (
-              <Link to="/dashboard" className="text-foreground hover:text-primary transition-colors">
-                {t.dashboard}
-              </Link>
+              <>
+                <Link to="/dashboard" className="text-foreground hover:text-primary transition-colors">
+                  {t.dashboard}
+                </Link>
+                <Link to="/referrals" className="text-foreground hover:text-primary transition-colors">
+                  Referrals
+                </Link>
+              </>
             )}
           </div>
 

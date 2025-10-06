@@ -6,6 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, CreditCard, Smartphone } from "lucide-react";
+import { z } from "zod";
+
+const paymentSchema = z.object({
+  toolId: z.string().uuid("Invalid tool ID"),
+  amount: z.number().positive("Amount must be positive"),
+  upiId: z.string().regex(/^[\w.-]+@[\w.-]+$/, "Invalid UPI ID").optional(),
+});
 
 export default function Payment() {
   const [searchParams] = useSearchParams();
@@ -47,6 +54,19 @@ export default function Payment() {
   const handlePayment = async () => {
     if (!user || !toolId) return;
 
+    // Validate inputs
+    const validation = paymentSchema.safeParse({
+      toolId,
+      amount,
+      upiId: selectedMethod === "upi" ? upiId : undefined,
+    });
+
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
+      toast({ title: "Validation Error", description: firstError.message, variant: "destructive" });
+      return;
+    }
+
     if (selectedMethod === "upi" && !upiId) {
       toast({ title: "Please enter UPI ID", variant: "destructive" });
       return;
@@ -54,42 +74,66 @@ export default function Payment() {
 
     setLoading(true);
 
-    // Create payment record
-    const { data: payment, error } = await supabase
-      .from("payments")
-      .insert([{
-        user_id: user.id,
-        tool_id: toolId,
-        amount: amount,
-        payment_method: selectedMethod,
-        upi_id: selectedMethod === "upi" ? upiId : null,
-        status: "pending"
-      }])
-      .select()
-      .single();
+    try {
+      // Verify tool exists and amount is valid
+      const { data: toolData, error: toolError } = await supabase
+        .from("ai_tools")
+        .select("price_monthly, price_annual")
+        .eq("id", toolId)
+        .single();
 
-    if (error) {
-      toast({ title: "Payment failed", description: error.message, variant: "destructive" });
+      if (toolError || !toolData) {
+        throw new Error("Invalid tool selected");
+      }
+
+      const validAmount = amount === toolData.price_monthly || amount === toolData.price_annual;
+      if (!validAmount) {
+        throw new Error("Invalid payment amount");
+      }
+
+      // Create payment record
+      const { data: payment, error } = await supabase
+        .from("payments")
+        .insert([{
+          user_id: user.id,
+          tool_id: toolId,
+          amount: amount,
+          payment_method: selectedMethod,
+          upi_id: selectedMethod === "upi" ? upiId : null,
+          status: "pending"
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      // Generate UPI payment link
+      const upiUrl = generateUpiUrl(payment.id);
+      
+      // Open UPI app
+      window.location.href = upiUrl;
+
+      // Show success message
+      toast({ 
+        title: "Payment initiated", 
+        description: "Please complete payment in your UPI app" 
+      });
+
+      // Wait for payment confirmation (in real app, use webhooks)
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 3000);
+    } catch (error: any) {
+      toast({ 
+        title: "Payment failed", 
+        description: error.message, 
+        variant: "destructive" 
+      });
+    } finally {
       setLoading(false);
-      return;
     }
-
-    // Generate UPI payment link
-    const upiUrl = generateUpiUrl(payment.id);
-    
-    // Open UPI app
-    window.location.href = upiUrl;
-
-    // Show success message
-    toast({ 
-      title: "Payment initiated", 
-      description: "Please complete payment in your UPI app" 
-    });
-
-    // Wait for payment confirmation (in real app, use webhooks)
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 3000);
   };
 
   const generateUpiUrl = (paymentId: string) => {

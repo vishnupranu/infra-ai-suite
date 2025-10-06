@@ -311,6 +311,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      validate_payment_amount: {
+        Args: { p_amount: number; p_tool_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "user" | "admin"

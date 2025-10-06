@@ -6,7 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { z } from "zod";
 import logo from "@/assets/logo.svg";
+
+const authSchema = z.object({
+  email: z.string().trim().email("Invalid email address").max(255),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  fullName: z.string().trim().min(1, "Name is required").max(100).optional(),
+});
 
 export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -38,13 +45,31 @@ export default function Auth() {
     setLoading(true);
 
     try {
+      // Validate inputs
+      const validation = authSchema.safeParse({
+        email,
+        password,
+        fullName: isSignUp ? fullName : undefined,
+      });
+
+      if (!validation.success) {
+        const firstError = validation.error.errors[0];
+        toast({
+          title: "Validation Error",
+          description: firstError.message,
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
       if (isSignUp) {
         const { error } = await supabase.auth.signUp({
-          email,
-          password,
+          email: validation.data.email,
+          password: validation.data.password,
           options: {
             data: {
-              full_name: fullName,
+              full_name: validation.data.fullName,
             },
             emailRedirectTo: `${window.location.origin}/dashboard`,
           },
@@ -58,8 +83,8 @@ export default function Auth() {
         });
       } else {
         const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
+          email: validation.data.email,
+          password: validation.data.password,
         });
 
         if (error) throw error;

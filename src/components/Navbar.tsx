@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { useUserRole } from "@/hooks/useUserRole";
 import logo from "@/assets/logo.svg";
 import {
   DropdownMenu,
@@ -10,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
+import { LogOut, LayoutDashboard, User as UserIcon, ShieldCheck } from "lucide-react";
 
 interface NavbarProps {
   language: string;
@@ -20,6 +21,7 @@ interface NavbarProps {
 export const Navbar = ({ language, setLanguage }: NavbarProps) => {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
+  const { isAdmin } = useUserRole();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -82,6 +84,11 @@ export const Navbar = ({ language, setLanguage }: NavbarProps) => {
                 <Link to="/referrals" className="text-foreground hover:text-primary transition-colors">
                   Referrals
                 </Link>
+                {isAdmin && (
+                  <Link to="/admin/tools" className="text-foreground hover:text-primary transition-colors">
+                    Admin
+                  </Link>
+                )}
               </>
             )}
           </div>
@@ -108,6 +115,12 @@ export const Navbar = ({ language, setLanguage }: NavbarProps) => {
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     {t.dashboard}
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem onClick={() => navigate("/admin/tools")}>
+                      <ShieldCheck className="mr-2 h-4 w-4" />
+                      Admin
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem onClick={handleSignOut}>
                     <LogOut className="mr-2 h-4 w-4" />
                     {t.signOut}

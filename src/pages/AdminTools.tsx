@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Trash2, Edit } from "lucide-react";
+import { useUserRole } from "@/hooks/useUserRole";
+import { Loader2, Plus, Trash2, Edit, ShieldAlert } from "lucide-react";
 
 interface AITool {
   id: string;
@@ -22,6 +24,8 @@ interface AITool {
 }
 
 export default function AdminTools() {
+  const navigate = useNavigate();
+  const { isAdmin, loading: roleLoading } = useUserRole();
   const [tools, setTools] = useState<AITool[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingTool, setEditingTool] = useState<AITool | null>(null);
@@ -40,8 +44,21 @@ export default function AdminTools() {
   const { toast } = useToast();
 
   useEffect(() => {
-    loadTools();
-  }, []);
+    if (!roleLoading && !isAdmin) {
+      toast({
+        title: "Access Denied",
+        description: "You don't have admin privileges",
+        variant: "destructive",
+      });
+      navigate("/dashboard");
+    }
+  }, [isAdmin, roleLoading, navigate, toast]);
+
+  useEffect(() => {
+    if (isAdmin) {
+      loadTools();
+    }
+  }, [isAdmin]);
 
   const loadTools = async () => {
     const { data, error } = await supabase

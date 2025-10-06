@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User } from "@supabase/supabase-js";
+import { useUserRole } from "@/hooks/useUserRole";
 import {
   Wallet,
   CreditCard,
@@ -21,6 +22,7 @@ export default function Dashboard() {
   const [profile, setProfile] = useState<any>(null);
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const navigate = useNavigate();
+  const { isAdmin } = useUserRole();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -246,7 +248,12 @@ export default function Dashboard() {
                   <p className="text-muted-foreground mb-4">
                     Referral earnings will appear here
                   </p>
-                  <Button className="bg-gradient-primary">Share Referral Link</Button>
+                  <div className="flex gap-4 justify-center">
+                    <Button onClick={() => navigate("/referrals")} className="bg-gradient-primary">Share Referral Link</Button>
+                    {isAdmin && (
+                      <Button onClick={() => navigate("/admin/tools")} variant="outline">Admin Tools</Button>
+                    )}
+                  </div>
                 </div>
               </Card>
             </TabsContent>

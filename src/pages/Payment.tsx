@@ -23,14 +23,27 @@ export default function Payment() {
   const [tool, setTool] = useState<any>(null);
   const [upiId, setUpiId] = useState("");
   const [selectedMethod, setSelectedMethod] = useState<"gpay" | "phonepe" | "upi">("gpay");
+  const [promoCode, setPromoCode] = useState("");
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const [finalAmount, setFinalAmount] = useState(499); // Default to monthly price
+  const [planType, setPlanType] = useState<"monthly" | "yearly">("monthly");
 
   const toolId = searchParams.get("tool");
-  const amount = parseFloat(searchParams.get("amount") || "0");
+  const baseAmount = parseFloat(searchParams.get("amount") || "0");
 
   useEffect(() => {
     checkUser();
     if (toolId) loadTool();
   }, [toolId]);
+
+  useEffect(() => {
+    // Set initial amount based on plan type
+    if (planType === "monthly") {
+      setFinalAmount(discountApplied ? 299 : 499);
+    } else {
+      setFinalAmount(9999);
+    }
+  }, [planType, discountApplied]);
 
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -57,7 +70,7 @@ export default function Payment() {
     // Validate inputs
     const validation = paymentSchema.safeParse({
       toolId,
-      amount,
+      amount: finalAmount,
       upiId: selectedMethod === "upi" ? upiId : undefined,
     });
 
@@ -86,7 +99,7 @@ export default function Payment() {
         throw new Error("Invalid tool selected");
       }
 
-      const validAmount = amount === toolData.price_monthly || amount === toolData.price_annual;
+      const validAmount = finalAmount === toolData.price_monthly || finalAmount === toolData.price_annual || finalAmount === 299 || finalAmount === 9999;
       if (!validAmount) {
         throw new Error("Invalid payment amount");
       }
@@ -97,7 +110,7 @@ export default function Payment() {
         .insert([{
           user_id: user.id,
           tool_id: toolId,
-          amount: amount,
+          amount: finalAmount,
           payment_method: selectedMethod,
           upi_id: selectedMethod === "upi" ? upiId : null,
           status: "pending"
@@ -136,13 +149,30 @@ export default function Payment() {
     }
   };
 
+  const applyPromoCode = () => {
+    if (promoCode.toUpperCase() === "SAVE200" && planType === "monthly") {
+      setDiscountApplied(true);
+      setFinalAmount(299);
+      toast({ 
+        title: "Promo code applied!", 
+        description: "You saved ₹200! Final amount: ₹299" 
+      });
+    } else {
+      toast({ 
+        title: "Invalid promo code", 
+        description: "Please check the code and try again", 
+        variant: "destructive" 
+      });
+    }
+  };
+
   const generateUpiUrl = (paymentId: string) => {
-    const merchantUpi = "merchant@upi"; // Replace with actual merchant UPI
-    const merchantName = "APPAIETECH";
-    const transactionNote = `Payment for ${tool?.name || "AI Tool"}`;
+    const merchantUpi = "8884162999-4@ybl";
+    const merchantName = "AItechuser";
+    const transactionNote = `Payment to ${merchantName}`;
     
     // UPI deep link format
-    return `upi://pay?pa=${merchantUpi}&pn=${encodeURIComponent(merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}&tr=${paymentId}`;
+    return `upi://pay?pa=${merchantUpi}&pn=${encodeURIComponent(merchantName)}&tn=${encodeURIComponent(transactionNote)}&cu=INR&am=${finalAmount}`;
   };
 
   if (!user) {
@@ -155,22 +185,89 @@ export default function Payment() {
 
   return (
     <div className="container mx-auto p-6 max-w-2xl">
-      <Card className="bg-gradient-to-br from-background to-card border-border">
+      <Card className="bg-gradient-card border-border animate-fade-in">
         <CardHeader>
-          <CardTitle className="text-3xl">Complete Payment</CardTitle>
+          <CardTitle className="text-3xl bg-gradient-primary bg-clip-text text-transparent">Complete Payment</CardTitle>
           <CardDescription>
-            {tool ? `Subscribe to ${tool.name}` : "Process your payment securely"}
+            Subscribe to access 1000+ AI Tools
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {tool && (
-            <div className="p-4 bg-background/50 rounded-lg">
-              <h3 className="font-semibold text-lg mb-2">{tool.name}</h3>
-              <p className="text-muted-foreground mb-4">{tool.description}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-2xl font-bold text-primary">₹{amount}</span>
-                <span className="text-sm text-muted-foreground">per month</span>
+          {/* Plan Selection */}
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg">Select Your Plan</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                onClick={() => setPlanType("monthly")}
+                className={`p-6 border-2 rounded-xl transition-all ${
+                  planType === "monthly" 
+                    ? "border-primary bg-primary/10 shadow-glow" 
+                    : "border-border hover:border-primary/50"
+                }`}
+              >
+                <div className="text-left">
+                  <p className="font-bold text-xl mb-2">Monthly Plan</p>
+                  <div className="flex items-baseline gap-2 mb-2">
+                    {!discountApplied && (
+                      <span className="text-3xl font-bold text-primary">₹499</span>
+                    )}
+                    {discountApplied && (
+                      <>
+                        <span className="text-2xl text-muted-foreground line-through">₹499</span>
+                        <span className="text-3xl font-bold text-primary">₹299</span>
+                      </>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground">Access to all AI tools</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setPlanType("yearly");
+                  setDiscountApplied(false);
+                }}
+                className={`p-6 border-2 rounded-xl transition-all relative ${
+                  planType === "yearly" 
+                    ? "border-primary bg-primary/10 shadow-glow" 
+                    : "border-border hover:border-primary/50"
+                }`}
+              >
+                <div className="absolute -top-3 -right-3 bg-gradient-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold">
+                  BEST VALUE
+                </div>
+                <div className="text-left">
+                  <p className="font-bold text-xl mb-2">Yearly Plan</p>
+                  <div className="flex items-baseline gap-2 mb-2">
+                    <span className="text-3xl font-bold text-primary">₹9,999</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">All tools + Open source access</p>
+                  <p className="text-xs text-primary mt-1">Save ₹2,989 per year!</p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Promo Code */}
+          {planType === "monthly" && !discountApplied && (
+            <div className="space-y-2 animate-fade-in">
+              <h3 className="font-semibold">Have a promo code?</h3>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Enter code (e.g., SAVE200)"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                  className="flex-1"
+                />
+                <Button
+                  onClick={applyPromoCode}
+                  variant="outline"
+                  className="border-primary text-primary hover:bg-primary/10"
+                >
+                  Apply
+                </Button>
               </div>
+              <p className="text-xs text-muted-foreground">Use code SAVE200 to get ₹200 off!</p>
             </div>
           )}
 
@@ -237,7 +334,7 @@ export default function Payment() {
           <Button
             onClick={handlePayment}
             disabled={loading}
-            className="w-full"
+            className="w-full bg-gradient-primary hover:shadow-glow transition-all"
             size="lg"
           >
             {loading ? (
@@ -246,9 +343,25 @@ export default function Payment() {
                 Processing...
               </>
             ) : (
-              `Pay ₹${amount}`
+              `Pay ₹${finalAmount}`
             )}
           </Button>
+
+          {discountApplied && planType === "monthly" && (
+            <div className="p-4 bg-primary/10 border border-primary rounded-lg animate-fade-in">
+              <p className="text-sm text-center">
+                🎉 You're saving ₹200 with promo code <strong>SAVE200</strong>
+              </p>
+            </div>
+          )}
+
+          {planType === "yearly" && (
+            <div className="p-4 bg-primary/10 border border-primary rounded-lg">
+              <p className="text-sm text-center font-semibold">
+                ✨ Yearly plan includes VPS deployment access & open source code
+              </p>
+            </div>
+          )}
 
           <p className="text-xs text-center text-muted-foreground">
             Secure payment powered by UPI. Your payment information is encrypted.

@@ -89,6 +89,9 @@ export default function Index() {
       >
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-block animate-pulse mb-4 px-4 py-2 bg-primary/20 rounded-full border border-primary">
+              <span className="text-primary font-semibold">🎉 Limited Offer: Get ₹200 OFF</span>
+            </div>
             <h1 className="text-6xl md:text-7xl font-bold mb-6 animate-fade-in">
               <span className="bg-gradient-primary bg-clip-text text-transparent">
                 {t.hero.title}
@@ -100,20 +103,127 @@ export default function Index() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
               <Button
                 size="lg"
-                onClick={() => navigate("/tools")}
-                className="bg-gradient-primary hover:shadow-glow transition-all text-lg px-8 py-6"
+                onClick={() => navigate("/auth")}
+                className="bg-gradient-primary hover:shadow-glow transition-all text-lg px-8 py-6 animate-pulse"
               >
-                {t.hero.cta}
+                Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => navigate("/auth")}
+                onClick={() => navigate("/tools")}
                 className="border-primary text-primary hover:bg-primary/10 text-lg px-8 py-6"
               >
-                {t.hero.ctaSecondary}
+                {t.hero.cta}
               </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-20 bg-gradient-hero">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-xl text-muted-foreground">Choose the plan that works best for you</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Monthly Plan */}
+            <div className="relative p-8 bg-gradient-card rounded-2xl border-2 border-border hover:border-primary transition-all hover:shadow-elevated group">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-bold">
+                MOST POPULAR
+              </div>
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold mb-4">Monthly Plan</h3>
+                <div className="mb-2">
+                  <span className="text-3xl text-muted-foreground line-through">₹499</span>
+                </div>
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-6xl font-bold text-primary">₹299</span>
+                  <span className="text-muted-foreground">/month</span>
+                </div>
+                <p className="text-primary font-semibold mt-2">Save ₹200 with code SAVE200</p>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  <span>Access to 1000+ AI Tools</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-primary" />
+                  <span>Instant activation</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-primary" />
+                  <span>Secure UPI payments</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  <span>Referral earnings</span>
+                </li>
+              </ul>
+              <Button 
+                onClick={() => navigate("/auth")}
+                className="w-full bg-gradient-primary hover:shadow-glow transition-all"
+                size="lg"
+              >
+                Get Started Now
+              </Button>
+            </div>
+
+            {/* Yearly Plan */}
+            <div className="relative p-8 bg-gradient-card rounded-2xl border-2 border-primary hover:shadow-glow transition-all">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-bold">
+                BEST VALUE
+              </div>
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold mb-4">Yearly Plan</h3>
+                <div className="flex items-baseline justify-center gap-2 mb-2">
+                  <span className="text-6xl font-bold text-primary">₹9,999</span>
+                  <span className="text-muted-foreground">/year</span>
+                </div>
+                <p className="text-primary font-semibold">Save ₹2,989 per year!</p>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  <span className="font-semibold">Everything in Monthly, plus:</span>
+                </li>
+                <li className="flex items-center gap-2 pl-6">
+                  <span>💎 Priority support</span>
+                </li>
+                <li className="flex items-center gap-2 pl-6">
+                  <span>🚀 VPS deployment access</span>
+                </li>
+                <li className="flex items-center gap-2 pl-6">
+                  <span>📦 Open source code access</span>
+                </li>
+                <li className="flex items-center gap-2 pl-6">
+                  <span>🎯 Advanced analytics</span>
+                </li>
+              </ul>
+              <Button 
+                onClick={() => navigate("/auth")}
+                className="w-full bg-gradient-primary hover:shadow-glow transition-all animate-pulse"
+                size="lg"
+              >
+                Get Yearly Access
+              </Button>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-muted-foreground mb-4">All plans include:</p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <span className="px-4 py-2 bg-primary/10 rounded-full text-sm">✅ Instant Activation</span>
+              <span className="px-4 py-2 bg-primary/10 rounded-full text-sm">✅ Cancel Anytime</span>
+              <span className="px-4 py-2 bg-primary/10 rounded-full text-sm">✅ 24/7 Support</span>
+              <span className="px-4 py-2 bg-primary/10 rounded-full text-sm">✅ Regular Updates</span>
             </div>
           </div>
         </div>

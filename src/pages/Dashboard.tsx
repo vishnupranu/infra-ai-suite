@@ -31,8 +31,7 @@ export default function Dashboard() {
         return;
       }
       setUser(session.user);
-      fetchProfile(session.user.id);
-      fetchSubscriptions(session.user.id);
+      checkPaymentStatus(session.user.id);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -45,6 +44,22 @@ export default function Dashboard() {
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  const checkPaymentStatus = async (userId: string) => {
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("payment_verified")
+      .eq("id", userId)
+      .single();
+
+    if (profileData && !profileData.payment_verified) {
+      navigate("/payment");
+      return;
+    }
+
+    fetchProfile(userId);
+    fetchSubscriptions(userId);
+  };
 
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase

@@ -157,6 +157,9 @@ export type Database = {
           email: string
           full_name: string | null
           id: string
+          payment_id: string | null
+          payment_verified: boolean | null
+          phone: string | null
           preferred_language: string | null
           updated_at: string | null
         }
@@ -166,6 +169,9 @@ export type Database = {
           email: string
           full_name?: string | null
           id: string
+          payment_id?: string | null
+          payment_verified?: boolean | null
+          phone?: string | null
           preferred_language?: string | null
           updated_at?: string | null
         }
@@ -175,10 +181,21 @@ export type Database = {
           email?: string
           full_name?: string | null
           id?: string
+          payment_id?: string | null
+          payment_verified?: boolean | null
+          phone?: string | null
           preferred_language?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       referral_codes: {
         Row: {

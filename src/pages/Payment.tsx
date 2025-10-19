@@ -25,7 +25,7 @@ export default function Payment() {
   const [selectedMethod, setSelectedMethod] = useState<"gpay" | "phonepe" | "upi">("gpay");
   const [promoCode, setPromoCode] = useState("");
   const [discountApplied, setDiscountApplied] = useState(false);
-  const [finalAmount, setFinalAmount] = useState(499); // Default to monthly price
+  const [finalAmount, setFinalAmount] = useState(9.99); // Default to monthly price
   const [planType, setPlanType] = useState<"monthly" | "yearly">("monthly");
 
   const toolId = searchParams.get("tool");
@@ -39,9 +39,9 @@ export default function Payment() {
   useEffect(() => {
     // Set initial amount based on plan type
     if (planType === "monthly") {
-      setFinalAmount(discountApplied ? 299 : 499);
+      setFinalAmount(discountApplied ? 5.99 : 9.99);
     } else {
-      setFinalAmount(9999);
+      setFinalAmount(99.99);
     }
   }, [planType, discountApplied]);
 
@@ -99,7 +99,7 @@ export default function Payment() {
         throw new Error("Invalid tool selected");
       }
 
-      const validAmount = finalAmount === toolData.price_monthly || finalAmount === toolData.price_annual || finalAmount === 299 || finalAmount === 9999;
+      const validAmount = finalAmount === toolData.price_monthly || finalAmount === toolData.price_annual || finalAmount === 5.99 || finalAmount === 9.99 || finalAmount === 99.99;
       if (!validAmount) {
         throw new Error("Invalid payment amount");
       }
@@ -152,10 +152,10 @@ export default function Payment() {
   const applyPromoCode = () => {
     if (promoCode.toUpperCase() === "SAVE200" && planType === "monthly") {
       setDiscountApplied(true);
-      setFinalAmount(299);
+      setFinalAmount(5.99);
       toast({ 
         title: "Promo code applied!", 
-        description: "You saved ₹200! Final amount: ₹299" 
+        description: "You saved $4! Final amount: $5.99" 
       });
     } else {
       toast({ 
@@ -209,12 +209,12 @@ export default function Payment() {
                   <p className="font-bold text-xl mb-2">Monthly Plan</p>
                   <div className="flex items-baseline gap-2 mb-2">
                     {!discountApplied && (
-                      <span className="text-3xl font-bold text-primary">₹499</span>
+                      <span className="text-3xl font-bold text-primary">$9.99</span>
                     )}
                     {discountApplied && (
                       <>
-                        <span className="text-2xl text-muted-foreground line-through">₹499</span>
-                        <span className="text-3xl font-bold text-primary">₹299</span>
+                        <span className="text-2xl text-muted-foreground line-through">$9.99</span>
+                        <span className="text-3xl font-bold text-primary">$5.99</span>
                       </>
                     )}
                   </div>
@@ -239,10 +239,10 @@ export default function Payment() {
                 <div className="text-left">
                   <p className="font-bold text-xl mb-2">Yearly Plan</p>
                   <div className="flex items-baseline gap-2 mb-2">
-                    <span className="text-3xl font-bold text-primary">₹9,999</span>
+                    <span className="text-3xl font-bold text-primary">$99.99</span>
                   </div>
                   <p className="text-sm text-muted-foreground">All tools + Open source access</p>
-                  <p className="text-xs text-primary mt-1">Save ₹2,989 per year!</p>
+                  <p className="text-xs text-primary mt-1">Save $19.89 per year!</p>
                 </div>
               </button>
             </div>
@@ -267,7 +267,7 @@ export default function Payment() {
                   Apply
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground">Use code SAVE200 to get ₹200 off!</p>
+              <p className="text-xs text-muted-foreground">Use code SAVE200 to get $4 off!</p>
             </div>
           )}
 
@@ -343,14 +343,14 @@ export default function Payment() {
                 Processing...
               </>
             ) : (
-              `Pay ₹${finalAmount}`
+              `Pay $${finalAmount}`
             )}
           </Button>
 
           {discountApplied && planType === "monthly" && (
             <div className="p-4 bg-primary/10 border border-primary rounded-lg animate-fade-in">
               <p className="text-sm text-center">
-                🎉 You're saving ₹200 with promo code <strong>SAVE200</strong>
+                🎉 You're saving $4 with promo code <strong>SAVE200</strong>
               </p>
             </div>
           )}

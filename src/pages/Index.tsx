@@ -1,288 +1,387 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { AIToolCard } from "@/components/AIToolCard";
-import { ArrowRight, Sparkles, TrendingUp, Shield, Zap } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import {
+  Sparkles,
+  Zap,
+  Rocket,
+  Code,
+  Database,
+  Globe,
+  Brain,
+  Bot,
+  Workflow,
+  Check,
+  DollarSign,
+  Clock,
+  Users,
+  Shield,
+} from "lucide-react";
 import heroImage from "@/assets/hero-bg.jpg";
-import { useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
 
 export default function Index() {
-  const [language, setLanguage] = useState("english");
-  const [featuredTools, setFeaturedTools] = useState<any[]>([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchFeaturedTools();
-  }, []);
-
-  const fetchFeaturedTools = async () => {
-    const { data } = await supabase
-      .from("ai_tools")
-      .select("*")
-      .eq("is_featured", true)
-      .limit(6);
-    
-    setFeaturedTools(data || []);
-  };
+  const [language, setLanguage] = useState("english");
 
   const translations = {
     english: {
       hero: {
-        title: "One Platform. 1000+ AI Tools.",
-        subtitle: "Supercharge your productivity with the ultimate AI marketplace",
-        cta: "Explore Tools",
-        ctaSecondary: "Get Started",
+        badge: "🚀 Limited Time Offer",
+        title: "Build $10,000 Worth Apps in 10 Minutes",
+        subtitle: "One Platform. 1000+ AI Tools. Unlimited Possibilities.",
+        description: "Stop paying for multiple AI subscriptions. Access ChatGPT, Midjourney, Claude, Gemini & 1000+ tools with ONE subscription.",
+        cta: "Start Your Journey - $5.99/mo",
+        secondaryCta: "View All Tools",
       },
       features: {
-        title: "Why Choose APPAIETECH?",
-        items: [
-          { icon: Sparkles, title: "Curated Selection", desc: "Hand-picked AI tools for every need" },
-          { icon: TrendingUp, title: "Earn with Referrals", desc: "Get credits for every user you refer" },
-          { icon: Shield, title: "Secure Payments", desc: "UPI, GPay, PhonePe integration" },
-          { icon: Zap, title: "Instant Access", desc: "Start using tools immediately" },
-        ],
+        title: "Everything You Need to Build AI-Powered Apps",
+        subtitle: "From Idea to Deployment in Minutes, Not Months",
       },
-      featured: {
-        title: "Featured AI Tools",
-        subtitle: "Discover the most popular AI solutions",
+      pricing: {
+        title: "Simple, Transparent Pricing",
+        monthly: "Monthly",
+        yearly: "Yearly",
+        save: "BEST VALUE",
       },
+      benefits: [
+        "1000+ AI Tools Access",
+        "N8N Workflow Automation",
+        "AI Agent Development",
+        "Text-to-App Generation",
+        "Backend + Frontend + DB",
+        "One-Click Deployment",
+        "Open Source Code",
+        "VPS Deployment Guide",
+      ],
     },
     telugu: {
       hero: {
-        title: "ఒక ప్లాట్‌ఫారమ్. 1000+ AI టూల్స్.",
-        subtitle: "అత్యుత్తమ AI మార్కెట్‌ప్లేస్‌తో మీ ఉత్పాదకతను పెంచుకోండి",
-        cta: "టూల్స్ అన్వేషించండి",
-        ctaSecondary: "ప్రారంభించండి",
+        badge: "🚀 పరిమిత సమయం ఆఫర్",
+        title: "10 నిమిషాల్లో $10,000 విలువైన యాప్‌లను రూపొందించండి",
+        subtitle: "ఒక ప్లాట్‌ఫారం. 1000+ AI టూల్స్. అపరిమిత అవకాశాలు.",
+        description: "బహుళ AI చందాలను చెల్లించడం ఆపండి. ChatGPT, Midjourney, Claude, Gemini & 1000+ టూల్స్‌ను ఒక్క చందాతో యాక్సెస్ చేయండి.",
+        cta: "మీ ప్రయాణాన్ని ప్రారంభించండి - $5.99/నెల",
+        secondaryCta: "అన్ని టూల్స్ చూడండి",
       },
       features: {
-        title: "APPAIETECH ఎందుకు ఎంచుకోవాలి?",
-        items: [
-          { icon: Sparkles, title: "క్యూరేటెడ్ ఎంపిక", desc: "ప్రతి అవసరానికి హస్తచేసిన AI టూల్స్" },
-          { icon: TrendingUp, title: "రెఫరల్స్‌తో సంపాదించండి", desc: "మీరు సూచించే ప్రతి యూజర్‌కు క్రెడిట్లు పొందండి" },
-          { icon: Shield, title: "సురక్షిత చెల్లింపులు", desc: "UPI, GPay, PhonePe ఇంటిగ్రేషన్" },
-          { icon: Zap, title: "తక్షణ యాక్సెస్", desc: "వెంటనే టూల్స్ ఉపయోగించడం ప్రారంభించండి" },
-        ],
+        title: "AI-ఆధారిత యాప్‌లను రూపొందించడానికి మీకు కావలసినవన్నీ",
+        subtitle: "ఆలోచన నుండి విస్తరణ వరకు నిమిషాల్లో, నెలల్లో కాదు",
       },
-      featured: {
-        title: "ఫీచర్డ్ AI టూల్స్",
-        subtitle: "అత్యంత ప్రజాదరణ పొందిన AI పరిష్కారాలను కనుగొనండి",
+      pricing: {
+        title: "సరళమైన, పారదర్శక ధర",
+        monthly: "నెలవారీ",
+        yearly: "వార్షిక",
+        save: "ఉత్తమ విలువ",
       },
+      benefits: [
+        "1000+ AI టూల్స్ యాక్సెస్",
+        "N8N వర్క్‌ఫ్లో ఆటోమేషన్",
+        "AI ఏజెంట్ అభివృద్ధి",
+        "టెక్స్ట్-టు-యాప్ జనరేషన్",
+        "బ్యాకెండ్ + ఫ్రంటెండ్ + DB",
+        "వన-క్లిక్ డిప్లాయ్‌మెంట్",
+        "ఓపెన్ సోర్స్ కోడ్",
+        "VPS డిప్లాయ్‌మెంట్ గైడ్",
+      ],
+    },
+    hindi: {
+      hero: {
+        badge: "🚀 सीमित समय का ऑफर",
+        title: "10 मिनट में $10,000 मूल्य के ऐप्स बनाएं",
+        subtitle: "एक प्लेटफॉर्म। 1000+ AI टूल्स। असीमित संभावनाएं।",
+        description: "कई AI सब्सक्रिप्शन के लिए भुगतान करना बंद करें। ChatGPT, Midjourney, Claude, Gemini और 1000+ टूल्स को एक सब्सक्रिप्शन से एक्सेस करें।",
+        cta: "अपनी यात्रा शुरू करें - $5.99/माह",
+        secondaryCta: "सभी टूल्स देखें",
+      },
+      features: {
+        title: "AI-संचालित ऐप्स बनाने के लिए आपको चाहिए सब कुछ",
+        subtitle: "विचार से तैनाती तक मिनटों में, महीनों में नहीं",
+      },
+      pricing: {
+        title: "सरल, पारदर्शी मूल्य निर्धारण",
+        monthly: "मासिक",
+        yearly: "वार्षिक",
+        save: "सर्वश्रेष्ठ मूल्य",
+      },
+      benefits: [
+        "1000+ AI टूल्स एक्सेस",
+        "N8N वर्कफ्लो ऑटोमेशन",
+        "AI एजेंट विकास",
+        "टेक्स्ट-टू-ऐप जनरेशन",
+        "बैकेंड + फ्रंटएंड + DB",
+        "वन-क्लिक डिप्लॉयमेंट",
+        "ओपन सोर्स कोड",
+        "VPS डिप्लॉयमेंट गाइड",
+      ],
     },
   };
 
   const t = translations[language as keyof typeof translations];
 
+  const features = [
+    {
+      icon: <Workflow className="h-8 w-8" />,
+      title: "N8N Workflow Automation",
+      description: "Build complex automation workflows without coding",
+    },
+    {
+      icon: <Brain className="h-8 w-8" />,
+      title: "AI Models Integration",
+      description: "Access GPT-5, Gemini 2.5, Claude, Llama & more",
+    },
+    {
+      icon: <Bot className="h-8 w-8" />,
+      title: "AI Agent Development",
+      description: "Create intelligent agents for any task",
+    },
+    {
+      icon: <Code className="h-8 w-8" />,
+      title: "Text to App Generation",
+      description: "Describe your app, get production-ready code",
+    },
+    {
+      icon: <Database className="h-8 w-8" />,
+      title: "Full Stack in Minutes",
+      description: "Backend, Frontend, Database - all automated",
+    },
+    {
+      icon: <Rocket className="h-8 w-8" />,
+      title: "One-Click Deployment",
+      description: "Deploy to VPS or cloud with single click",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar language={language} setLanguage={setLanguage} />
-      
+
       {/* Hero Section */}
-      <section 
-        className="relative pt-32 pb-20 overflow-hidden"
-        style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 0.95)), url(${heroImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
+      <section className="relative pt-32 pb-20 overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `url(${heroImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-background to-background" />
+
         <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-block animate-pulse mb-4 px-4 py-2 bg-primary/20 rounded-full border border-primary">
-              <span className="text-primary font-semibold">🎉 Limited Offer: Get ₹200 OFF</span>
+          <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 rounded-full border border-primary/30 animate-pulse-glow">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">{t.hero.badge}</span>
             </div>
-            <h1 className="text-6xl md:text-7xl font-bold mb-6 animate-fade-in">
+
+            <h1 className="text-5xl md:text-7xl font-bold leading-tight">
               <span className="bg-gradient-primary bg-clip-text text-transparent">
                 {t.hero.title}
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-fade-in">
+
+            <p className="text-2xl md:text-3xl font-semibold text-foreground">
               {t.hero.subtitle}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
+
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              {t.hero.description}
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
+                className="bg-gradient-primary hover:shadow-glow transition-all text-lg px-8 py-6"
                 onClick={() => navigate("/auth")}
-                className="bg-gradient-primary hover:shadow-glow transition-all text-lg px-8 py-6 animate-pulse"
               >
-                Start Free Trial
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <Zap className="mr-2 h-5 w-5" />
+                {t.hero.cta}
               </Button>
               <Button
                 size="lg"
                 variant="outline"
+                className="border-primary text-lg px-8 py-6"
                 onClick={() => navigate("/tools")}
-                className="border-primary text-primary hover:bg-primary/10 text-lg px-8 py-6"
               >
-                {t.hero.cta}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="py-20 bg-gradient-hero">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="text-xl text-muted-foreground">Choose the plan that works best for you</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Monthly Plan */}
-            <div className="relative p-8 bg-gradient-card rounded-2xl border-2 border-border hover:border-primary transition-all hover:shadow-elevated group">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-bold">
-                MOST POPULAR
-              </div>
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold mb-4">Monthly Plan</h3>
-                <div className="mb-2">
-                  <span className="text-3xl text-muted-foreground line-through">₹499</span>
-                </div>
-                <div className="flex items-baseline justify-center gap-2">
-                  <span className="text-6xl font-bold text-primary">₹299</span>
-                  <span className="text-muted-foreground">/month</span>
-                </div>
-                <p className="text-primary font-semibold mt-2">Save ₹200 with code SAVE200</p>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  <span>Access to 1000+ AI Tools</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-primary" />
-                  <span>Instant activation</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-primary" />
-                  <span>Secure UPI payments</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-primary" />
-                  <span>Referral earnings</span>
-                </li>
-              </ul>
-              <Button 
-                onClick={() => navigate("/auth")}
-                className="w-full bg-gradient-primary hover:shadow-glow transition-all"
-                size="lg"
-              >
-                Get Started Now
+                {t.hero.secondaryCta}
               </Button>
             </div>
 
-            {/* Yearly Plan */}
-            <div className="relative p-8 bg-gradient-card rounded-2xl border-2 border-primary hover:shadow-glow transition-all">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-bold">
-                BEST VALUE
+            {/* Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12">
+              <div className="space-y-2">
+                <div className="text-4xl font-bold text-primary">1000+</div>
+                <div className="text-sm text-muted-foreground">AI Tools</div>
               </div>
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold mb-4">Yearly Plan</h3>
-                <div className="flex items-baseline justify-center gap-2 mb-2">
-                  <span className="text-6xl font-bold text-primary">₹9,999</span>
-                  <span className="text-muted-foreground">/year</span>
-                </div>
-                <p className="text-primary font-semibold">Save ₹2,989 per year!</p>
+              <div className="space-y-2">
+                <div className="text-4xl font-bold text-primary">10 min</div>
+                <div className="text-sm text-muted-foreground">Build Time</div>
               </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  <span className="font-semibold">Everything in Monthly, plus:</span>
-                </li>
-                <li className="flex items-center gap-2 pl-6">
-                  <span>💎 Priority support</span>
-                </li>
-                <li className="flex items-center gap-2 pl-6">
-                  <span>🚀 VPS deployment access</span>
-                </li>
-                <li className="flex items-center gap-2 pl-6">
-                  <span>📦 Open source code access</span>
-                </li>
-                <li className="flex items-center gap-2 pl-6">
-                  <span>🎯 Advanced analytics</span>
-                </li>
-              </ul>
-              <Button 
-                onClick={() => navigate("/auth")}
-                className="w-full bg-gradient-primary hover:shadow-glow transition-all animate-pulse"
-                size="lg"
-              >
-                Get Yearly Access
-              </Button>
-            </div>
-          </div>
-
-          <div className="text-center mt-12">
-            <p className="text-muted-foreground mb-4">All plans include:</p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <span className="px-4 py-2 bg-primary/10 rounded-full text-sm">✅ Instant Activation</span>
-              <span className="px-4 py-2 bg-primary/10 rounded-full text-sm">✅ Cancel Anytime</span>
-              <span className="px-4 py-2 bg-primary/10 rounded-full text-sm">✅ 24/7 Support</span>
-              <span className="px-4 py-2 bg-primary/10 rounded-full text-sm">✅ Regular Updates</span>
+              <div className="space-y-2">
+                <div className="text-4xl font-bold text-primary">$10K</div>
+                <div className="text-sm text-muted-foreground">App Value</div>
+              </div>
+              <div className="space-y-2">
+                <div className="text-4xl font-bold text-primary">1x</div>
+                <div className="text-sm text-muted-foreground">Subscription</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-hero">
+      <section className="py-20">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12 bg-gradient-primary bg-clip-text text-transparent">
-            {t.features.title}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {t.features.items.map((feature, idx) => {
-              const Icon = feature.icon;
-              return (
-                <div
-                  key={idx}
-                  className="p-6 bg-gradient-card rounded-xl border border-border hover:border-primary transition-all hover:shadow-elevated group"
-                >
-                  <div className="p-3 bg-primary/20 rounded-lg w-fit mb-4 group-hover:scale-110 transition-transform">
-                    <Icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.desc}</p>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">
+              <span className="bg-gradient-primary bg-clip-text text-transparent">
+                {t.features.title}
+              </span>
+            </h2>
+            <p className="text-xl text-muted-foreground">{t.features.subtitle}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Card
+                key={index}
+                className="p-6 bg-gradient-card border-border hover:shadow-glow transition-all hover:-translate-y-1 animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="p-3 bg-primary/20 rounded-lg w-fit mb-4">
+                  <div className="text-primary">{feature.icon}</div>
                 </div>
-              );
-            })}
+                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                <p className="text-muted-foreground">{feature.description}</p>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Tools Section */}
-      {featuredTools.length > 0 && (
-        <section className="py-20">
-          <div className="container mx-auto px-6">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
-                {t.featured.title}
-              </h2>
-              <p className="text-xl text-muted-foreground">{t.featured.subtitle}</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {featuredTools.map((tool) => (
-                <AIToolCard key={tool.id} {...tool} />
+      {/* Benefits Section */}
+      <section className="py-20 bg-secondary/30">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-4xl font-bold text-center mb-12">
+              <span className="bg-gradient-primary bg-clip-text text-transparent">
+                What You Get
+              </span>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {t.benefits.map((benefit, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-4 p-4 bg-background rounded-lg border border-border animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div className="p-2 bg-primary/20 rounded-full">
+                    <Check className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="font-medium">{benefit}</span>
+                </div>
               ))}
             </div>
-            <div className="text-center">
-              <Button
-                size="lg"
-                onClick={() => navigate("/tools")}
-                className="bg-gradient-primary hover:shadow-glow transition-all"
-              >
-                View All Tools
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">
+              <span className="bg-gradient-primary bg-clip-text text-transparent">
+                {t.pricing.title}
+              </span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Monthly Plan */}
+            <Card className="p-8 bg-gradient-card border-2 border-border hover:border-primary transition-all hover:-translate-y-2 hover:shadow-glow">
+              <div className="text-center space-y-4">
+                <h3 className="text-2xl font-bold">{t.pricing.monthly}</h3>
+                <div className="space-y-2">
+                  <div className="text-sm text-muted-foreground line-through">$9.99</div>
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span className="text-5xl font-bold text-primary">$5.99</span>
+                    <span className="text-muted-foreground">/month</span>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Use code <strong className="text-primary">SAVE200</strong> at checkout
+                </p>
+                <Button
+                  size="lg"
+                  className="w-full bg-gradient-primary hover:shadow-glow"
+                  onClick={() => navigate("/auth")}
+                >
+                  Get Started
+                </Button>
+              </div>
+            </Card>
+
+            {/* Yearly Plan */}
+            <Card className="p-8 bg-gradient-card border-2 border-primary relative hover:-translate-y-2 hover:shadow-glow transition-all">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-primary px-4 py-1 rounded-full">
+                <span className="text-sm font-bold text-primary-foreground">
+                  {t.pricing.save}
+                </span>
+              </div>
+              <div className="text-center space-y-4">
+                <h3 className="text-2xl font-bold">{t.pricing.yearly}</h3>
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-5xl font-bold text-primary">$99.99</span>
+                  <span className="text-muted-foreground">/year</span>
+                </div>
+                <p className="text-sm text-primary font-semibold">
+                  Save $19.89 + Get Open Source Access
+                </p>
+                <Button
+                  size="lg"
+                  className="w-full bg-gradient-primary hover:shadow-glow"
+                  onClick={() => navigate("/auth")}
+                >
+                  Get Started
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20" />
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-3xl mx-auto text-center space-y-6">
+            <h2 className="text-4xl md:text-5xl font-bold">
+              <span className="bg-gradient-primary bg-clip-text text-transparent">
+                Stop Paying for Multiple Tools
+              </span>
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Get unlimited access to 1000+ AI tools, workflows, and open source code.
+              Build enterprise-grade apps in minutes, not months.
+            </p>
+            <Button
+              size="lg"
+              className="bg-gradient-primary hover:shadow-glow text-lg px-8 py-6"
+              onClick={() => navigate("/auth")}
+            >
+              <Rocket className="mr-2 h-5 w-5" />
+              Start Building Today - $5.99/mo
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 }

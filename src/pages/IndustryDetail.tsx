@@ -19,7 +19,7 @@ export default function IndustryDetail() {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase
+      const { data } = await (supabase as any)
         .from("industry_solutions")
         .select("*")
         .eq("slug", id)

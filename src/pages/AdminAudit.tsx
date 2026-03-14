@@ -23,7 +23,7 @@ export default function AdminAudit() {
   }, []);
 
   const loadLogs = async () => {
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from("audit_logs")
       .select("*")
       .order("created_at", { ascending: false })

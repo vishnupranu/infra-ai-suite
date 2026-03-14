@@ -65,9 +65,11 @@ export default function AdminUsers() {
 
   const updateRole = async (userId: string, newRole: string) => {
     // Upsert role
+    // Delete existing roles first, then insert new one
+    await supabase.from("user_roles").delete().eq("user_id", userId);
     const { error } = await supabase
       .from("user_roles")
-      .upsert({ user_id: userId, role: newRole }, { onConflict: "user_id,role" });
+      .insert({ user_id: userId, role: newRole as any });
 
     if (error) {
       toast({ title: "Error updating role", variant: "destructive" });

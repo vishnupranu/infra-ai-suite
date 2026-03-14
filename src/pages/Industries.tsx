@@ -22,7 +22,7 @@ export default function Industries() {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase.from("industry_solutions").select("*").order("name");
+      const { data } = await (supabase as any).from("industry_solutions").select("*").order("name");
       setSolutions(data || []);
       setLoading(false);
     };

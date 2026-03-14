@@ -62,6 +62,30 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_events: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       announcements: {
         Row: {
           content: string
@@ -89,6 +113,39 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           title?: string
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          resource_id: string | null
+          resource_type: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -185,6 +242,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      industry_solutions: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          features: Json | null
+          icon_name: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          features?: Json | null
+          icon_name?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          features?: Json | null
+          icon_name?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
       }
       otp_codes: {
         Row: {
@@ -493,7 +580,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "user" | "admin"
+      app_role: "user" | "admin" | "developer" | "editor" | "viewer"
       subscription_status: "active" | "inactive" | "pending"
     }
     CompositeTypes: {
@@ -622,7 +709,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["user", "admin"],
+      app_role: ["user", "admin", "developer", "editor", "viewer"],
       subscription_status: ["active", "inactive", "pending"],
     },
   },
